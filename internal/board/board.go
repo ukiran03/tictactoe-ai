@@ -22,38 +22,29 @@ var cellSymbols = map[CellState]string{
 	NilState: " ",
 }
 
-// Board: is a 3x3 grid of square states
-type Board [3][3]CellState
+const (
+	Vbar = "│"
+	Hbar = "─"
+)
 
-// NewBoard: initializes a Board filled with NilState
-func NewBoard() Board {
-	var b Board
+type Board struct {
+	Grid  [3][3]CellState
+	Width int
+}
+
+func NewBoard() *Board {
+	var grid [3][3]CellState
 	for i := range 3 {
 		for j := range 3 {
-			b[i][j] = NilState
+			grid[i][j] = NilState
 		}
 	}
-	return b
+	return &Board{
+		Grid:  grid,
+		Width: 3,
+	}
 }
 
-// String: provides a basic printing of the Board
-func (b Board) String() string {
-	symbols := map[CellState]string{
-		OState:   "O",
-		XState:   "X",
-		NilState: " ",
-	}
-	var out strings.Builder
-	for _, row := range b {
-		for _, cs := range row {
-			fmt.Fprintf(&out, " %s ", symbols[cs])
-		}
-		out.WriteString("\n")
-	}
-	return out.String()
-}
-
-// render: renders pretty version of the board
 func (b Board) Render() string {
 	var out strings.Builder
 
@@ -65,36 +56,39 @@ func (b Board) Render() string {
 	// Vertical Num Row
 	writeHIndex(&out, 3, 1, 3)
 
-	out.WriteString(top.render(3)) // Top border
-	for i, row := range b {
+	top.render(&out, 3, 3) // Top border
+	for i, row := range b.Grid {
 		writeCellRow(&out, fmt.Sprintf("%d ", i), 1, row)
-		out.WriteString(mid.render(3))
-	}
-	out.WriteString(bot.render(3)) // Bot border
 
+		if i < len(b.Grid)-1 {
+			mid.render(&out, 3, 3) // Mid border
+		}
+	}
+	bot.render(&out, 3, 3) // Bot border
 	return out.String()
 }
 
-// Usage: writeCellRow(&b, 1, state)
-func writeCellRow(b io.Writer, prefix string, pad int, state [3]CellState) {
-	fmt.Fprint(b, prefix)
+// Usage: writeCellRow(&w, 1, state)
+func writeCellRow(w io.Writer, prefix string, pad int, state [3]CellState) {
+	fmt.Fprint(w, prefix)
 	for _, cs := range state {
 		// %s is the Vbar
 		// %*s handles the padding + the symbol
-		fmt.Fprintf(b, "%s %*s ", Vbar, pad, cellSymbols[cs])
+		fmt.Fprintf(w, "%s %*s ", Vbar, pad, cellSymbols[cs])
 	}
 	// Add the closing bar for the far right
-	fmt.Fprint(b, Vbar)
+	fmt.Fprintf(w, "%s\n", Vbar)
 }
 
 // writeHIndex: writes Horizontal Index row
 // rng: 0, 1, 2,..
 // pad: padding length
 // prefix: prefix length for each integer
-// Usage: writeHIndex(&b, 3, 1, 3)
-func writeHIndex(b io.Writer, rng, pad, prefix int) {
-	fmt.Fprintf(b, "%*s", pad, "")
+// Usage: writeHIndex(&w, 3, 1, 3)
+func writeHIndex(w io.Writer, rng, pad, prefix int) {
+	fmt.Fprintf(w, "%*s", pad, "")
 	for i := range rng {
-		fmt.Fprintf(b, "%*s%d", prefix, "", i)
+		fmt.Fprintf(w, "%*s%d", prefix, "", i)
 	}
+	fmt.Fprint(w, "\n")
 }

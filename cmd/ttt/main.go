@@ -11,9 +11,9 @@ func main() {
 	gameBoard := board.NewBoard()
 
 	// Simulate some moves
-	gameBoard[0][0] = board.XState
-	gameBoard[1][1] = board.OState
-	gameBoard[2][2] = board.XState
+	gameBoard.Grid[0][0] = board.XState
+	gameBoard.Grid[1][1] = board.OState
+	gameBoard.Grid[2][2] = board.XState
 
 	fmt.Println(gameBoard.Render())
 }

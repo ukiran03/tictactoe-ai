@@ -2,12 +2,7 @@ package board
 
 import (
 	"fmt"
-	"strings"
-)
-
-const (
-	Vbar = "│"
-	Hbar = "─"
+	"io"
 )
 
 type border struct {
@@ -36,32 +31,15 @@ func NewBorder(bp borderType) border {
 	}
 }
 
-func (br border) render(fillWid int) string {
-	var out strings.Builder
-
-	out.WriteString(br.pre)
-	for i := range fillWid {
-		for range fillWid {
-			out.WriteString(br.filler)
+func (br border) render(w io.Writer, pad, width int) {
+	fmt.Fprintf(w, "%*s", pad, br.pre)
+	for i := range width {
+		for range width {
+			fmt.Fprint(w, br.filler)
 		}
-		if i < fillWid-1 {
-			out.WriteString(br.middle)
+		if i < width-1 {
+			fmt.Fprint(w, br.middle)
 		}
 	}
-	out.WriteString(br.post)
-	return out.String()
-}
-
-// Helper to create a horizontal line (e.g., ┌───┬───┐)
-func renderBorder(b border) {
-	line := b.pre
-	for i := 0; i < len(gb.Cells[0]); i++ {
-		for j := 0; j < gb.Width; j++ {
-			line += "─"
-		}
-		if i < len(gb.Cells[0])-1 {
-			line += b.middle
-		}
-	}
-	fmt.Println(line + b.post)
+	fmt.Fprintf(w, "%s\n", br.post)
 }
