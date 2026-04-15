@@ -26,6 +26,3 @@ func GetMove() (*board.Vertex, error) {
 
 	return &board.Vertex{X: x, Y: y}, nil
 }
-
-// [13-04-2026] TODO: start here
-// https://robertheaton.com/2018/10/09/programming-projects-for-advanced-beginners-3-a/#:~:text=square%20already%20taken!%22-,5,-.%20Combining%20our%20work
