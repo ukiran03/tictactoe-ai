@@ -17,7 +17,7 @@ const (
 	Hbar = "─"
 )
 
-func (b Board) Render() string {
+func (b Board) Render() {
 	var out strings.Builder
 
 	// Boarders
@@ -37,7 +37,8 @@ func (b Board) Render() string {
 		}
 	}
 	bot.render(&out, 3, 3) // Bot border
-	return out.String()
+	fmt.Println(out.String())
+	return
 }
 
 // Usage: writeCellRow(&w, 1, state)
