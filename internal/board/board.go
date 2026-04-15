@@ -15,14 +15,14 @@ type Board struct {
 	Width int
 }
 
-func NewBoard() *Board {
+func NewBoard() Board {
 	var grid [3][3]CellState
 	for i := range 3 {
 		for j := range 3 {
 			grid[i][j] = NilState
 		}
 	}
-	return &Board{
+	return Board{
 		Grid:  grid,
 		Width: 3,
 	}

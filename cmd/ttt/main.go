@@ -33,6 +33,12 @@ func main() {
 
 		fmt.Println("That square is already taken or out of bounds!")
 	}
-	gameBoard = makeMove(gameBoard, move, xPlayer)
-	gameBoard.Render()
+
+	var err error
+	gameBoard, err = makeMove(gameBoard, move, xPlayer)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		gameBoard.Render()
+	}
 }

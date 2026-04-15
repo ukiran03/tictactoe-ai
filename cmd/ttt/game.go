@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"ukiran.com/tictactoe/internal/board"
 )
 
@@ -16,18 +18,22 @@ var playerStates = map[player]board.CellState{
 	oPlayer: board.OState,
 }
 
-func makeMove(b *board.Board, v *board.Vertex, p player) *board.Board {
-	// This creates a brand new copy of the Board struct and its [3][3] grid
-	newBoard := *b
+func makeMove(b board.Board, v *board.Vertex, p player) (board.Board, error) {
+	if !isValidMove(b, v) {
+		return b,
+			fmt.Errorf("Invalid move %v: square already taken or out of bounds", v)
+	}
+
+	// Creates a full copy of the struct and the fixed array
+	newBoard := b
 
 	// Apply the move to the copy
 	newBoard.Grid[v.X][v.Y] = playerStates[p]
 
-	// Return the address of the new copy
-	return &newBoard
+	return newBoard, nil
 }
 
-func isValidMove(b *board.Board, v *board.Vertex) bool {
+func isValidMove(b board.Board, v *board.Vertex) bool {
 	if v == nil {
 		return false
 	}

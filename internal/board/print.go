@@ -38,7 +38,6 @@ func (b Board) Render() {
 	}
 	bot.render(&out, 3, 3) // Bot border
 	fmt.Println(out.String())
-	return
 }
 
 // Usage: writeCellRow(&w, 1, state)
