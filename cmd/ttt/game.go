@@ -14,19 +14,7 @@ const (
 	nilPlayer
 )
 
-var playerState = map[player]board.CellState{
-	xPlayer:   board.XState,
-	oPlayer:   board.OState,
-	nilPlayer: board.NilState,
-}
-
-var stateOfPlayer = map[board.CellState]player{
-	board.XState:   xPlayer,
-	board.OState:   oPlayer,
-	board.NilState: nilPlayer,
-}
-
-func makeMove(b board.Board, v *board.Vertex, p player) (board.Board, error) {
+func makeMove(b board.Board, v *board.Vertex, st board.CellState) (board.Board, error) {
 	if !isValidMove(b, v) {
 		return b,
 			fmt.Errorf("Invalid move %v: square already taken or out of bounds", v)
@@ -36,7 +24,7 @@ func makeMove(b board.Board, v *board.Vertex, p player) (board.Board, error) {
 	newBoard := b
 
 	// Apply the move to the copy
-	newBoard.Grid[v.X][v.Y] = playerState[p]
+	newBoard.Grid[v.X][v.Y] = st
 
 	return newBoard, nil
 }
@@ -54,13 +42,13 @@ func isValidMove(b board.Board, v *board.Vertex) bool {
 	return b.Grid[v.X][v.Y] == board.NilState
 }
 
-func getWinner(b board.Board) (bool, player) {
+func getWinner(b board.Board) (bool, string) {
 	for _, line := range allLineTriplets {
 		if found, state := getWinningPlayer(b, line); found {
-			return true, stateOfPlayer[state]
+			return true, state.Player()
 		}
 	}
-	return false, stateOfPlayer[board.NilState]
+	return false, board.NilState.Player()
 }
 
 func getWinningPlayer(b board.Board, line []board.Vertex) (bool, board.CellState) {

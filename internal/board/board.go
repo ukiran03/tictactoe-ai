@@ -10,6 +10,29 @@ const (
 
 )
 
+func (c CellState) Player() string {
+	return c.String()
+}
+
+func (c CellState) String() string {
+	switch c {
+	case XState:
+		return "X"
+	case OState:
+		return "O"
+	default:
+		return "-"
+	}
+}
+
+// Next tells you who follows this state
+func (c CellState) Next() CellState {
+	if c == XState {
+		return OState
+	}
+	return XState
+}
+
 type Board struct {
 	Grid  [3][3]CellState
 	Width int
