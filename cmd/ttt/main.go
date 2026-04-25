@@ -63,12 +63,12 @@ func getMove(scanner *bufio.Scanner) (bool, *board.Vertex, error) {
 	for scanner.Scan() {
 		input := strings.TrimSpace(scanner.Text())
 
-		// 1. Check for quit
+		// Check for quit
 		if strings.ToLower(input) == "q" {
 			return true, nil, nil
 		}
 
-		// 2. Parse coordinates
+		// Parse coordinates
 		parts := strings.Split(input, ",")
 		if len(parts) != 2 {
 			fmt.Println("Invalid format. Please use x,y (e.g., 1,2):")
@@ -83,7 +83,7 @@ func getMove(scanner *bufio.Scanner) (bool, *board.Vertex, error) {
 			continue
 		}
 
-		// 3. Return the vertex
+		// Return the vertex
 		return false, &board.Vertex{X: x, Y: y}, nil
 	}
 
